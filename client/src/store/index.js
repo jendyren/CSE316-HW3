@@ -116,7 +116,7 @@ export const useGlobalStore = () => {
         async function asyncChangeListName(id) {
             let response = await api.getPlaylistById(id);
             if (response.data.success) {
-                let playlist = response.data.playist;
+                let playlist = response.data.playlist;
                 playlist.name = newName;
                 async function updateList(playlist) {
                     response = await api.updatePlaylistById(playlist._id, playlist);
@@ -202,6 +202,30 @@ export const useGlobalStore = () => {
             type: GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE,
             payload: null
         });
+    }
+
+    store.createNewList = function (){
+        async function asyncCreateNewList() {
+            let newListName = "Untitled" + store.newListCounter;
+            let payload = { name: newListName, songs: [] };
+            const response = await api.createPlaylist(payload);
+
+            if (response.data.success) {
+                let newList = response.data.playlist;
+                storeReducer({
+                    type: GlobalStoreActionType.CREATE_NEW_LIST,
+                    payload: newList
+                }
+                );
+
+                // Edit list if valid 
+                store.history.push("/playlist/" + newList._id);
+            }
+            else {
+                console.log("Failed to create new list from API");
+            }
+        }
+        asyncCreateNewList();
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT

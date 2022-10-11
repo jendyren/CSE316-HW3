@@ -6,6 +6,8 @@ const Playlist = require('../models/playlist-model')
     
     @author McKilla Gorilla
 */
+// req = request
+// res = response
 createPlaylist = (req, res) => {
     const body = req.body;
     console.log("createPlaylist body: " + body);
@@ -87,9 +89,56 @@ getPlaylistPairs = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
+updatePlaylistById = async (req, res) => {
+    const body = req.body;
+    console.log(JSON.stringify(body));
+    console.log("Inside updatePlaylistByID");
+
+    if (!body) {
+        return res.status(404).json({
+            success: false,
+            error: 'Missing body - body is required to update',
+        })
+    }
+
+    await Playlist.findOne({ _id: req.params.id }, (err, list) => {
+        if (err) {
+            return res.status(404).json({
+                err,
+                message: 'No playlist found',
+            })
+        }
+        list.name = body.name
+        console.log(list.name);
+        list.songs = body.songs
+        console.log(list.songs);
+        list
+            .save()
+            .then(() => {
+                console.log("Success in updating Playlist");
+                return res.status(200).json({
+                    success: true,
+                    id: list._id,
+                    message: 'Playlist updated yay',
+                })
+            })
+            .catch(error => {
+                console.log("FAILURE: " + JSON.stringify(error));
+                return res.status(404).json({
+                    error,
+                    message: 'Playlist not updated boo',
+                })
+            })     
+    })
+    //promise - provide a placeholder for a thing that you promise will update later/ whenever it's available 
+    // i fyou don't wait the parameter might be null 
+    // await = wait until function 
+}
+
 module.exports = {
     createPlaylist,
     getPlaylists,
     getPlaylistPairs,
-    getPlaylistById
+    getPlaylistById,
+    updatePlaylistById,
 }

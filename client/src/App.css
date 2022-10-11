@@ -68,6 +68,7 @@ body {
   grid-row: 2 / 3;
   display:grid;
   background-color: var(--swatch-primary);
+  height: 70vh;
 }
 
 .playlister-button, .playlister-button-disabled {
@@ -104,6 +105,7 @@ body {
 
 #add-list-button {
   float:left;
+  margin-right: 20px;
 }
 
 .list-card, .selected-list-card, .unselected-list-card {
@@ -326,4 +328,39 @@ input {
   100% {
     transform: rotate(0deg);
   }
+}
+
+#playlist-selector-heading {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+  text-align: center;
+  font-size: 36pt;
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--swatch-primary);
+}
+
+.playlister-button {
+  font-size: 36pt;
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+  box-shadow: 2px 4px #888888;
+  border-radius: 5px;
+}
+
+#add-song-button {
+  height: 1.6em;
+}
+
+#close-button {
+  height: 1.6em;
+}
+
+#list-selector-list {
+  overflow-y: scroll;
+  height: 70vh;
 }
