@@ -26,6 +26,14 @@ function ListCard(props) {
         }
     }
 
+    async function handleDeletePlaylist(event) {
+        event.stopPropagation();
+        let PlaylistId = event.target.id;
+        PlaylistId = ("" + PlaylistId).substring("delete-list-".length);
+        console.log("Inside handleDeletePlaylist in ListCard.js");
+        store.markListForDeletion(PlaylistId);
+    }
+
     function handleToggleEdit(event) {
         event.stopPropagation();
         toggleEdit();
@@ -75,6 +83,7 @@ function ListCard(props) {
                 type="button"
                 id={"delete-list-" + idNamePair._id}
                 className="list-card-button"
+                onClick={handleDeletePlaylist}
                 value={"\u2715"}
             />
             <input
@@ -99,7 +108,10 @@ function ListCard(props) {
             />;
     }
     return (
-        cardElement
+        <div>
+            {cardElement}
+        </div>
+        
     );
 }
 

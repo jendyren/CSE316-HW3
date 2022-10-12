@@ -63,6 +63,7 @@ getPlaylists = async (req, res) => {
         return res.status(200).json({ success: true, data: playlists })
     }).catch(err => console.log(err))
 }
+// returns idNamePairs that returns the [{id, name}, {id2, name2}, {id3, name3}]
 getPlaylistPairs = async (req, res) => {
     await Playlist.find({}, (err, playlists) => {
         if (err) {
@@ -135,10 +136,25 @@ updatePlaylistById = async (req, res) => {
     // await = wait until function 
 }
 
+deletePlaylistById = async (req, res) => {
+    console.log("Inside deletePlaylistByID function");
+    console.log(req);
+    console.log(req.params.id);
+    console.log(res);
+    await Playlist.findOneAndDelete({ _id: req.params.id }, (err, list) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err, message: "playlist has not been deleted..."})
+        }
+
+        return res.status(200).json({ success: true, playlist: list, message: "playlist has been deleted..."})
+    }).catch(err => console.log(err))
+}
+
 module.exports = {
     createPlaylist,
     getPlaylists,
     getPlaylistPairs,
     getPlaylistById,
     updatePlaylistById,
+    deletePlaylistById
 }
