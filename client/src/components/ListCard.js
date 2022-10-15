@@ -30,12 +30,15 @@ function ListCard(props) {
         event.stopPropagation();
         let PlaylistId = event.target.id;
         PlaylistId = ("" + PlaylistId).substring("delete-list-".length);
+        console.log("PlaylistId is: ");
+        console.log(PlaylistId);
         console.log("Inside handleDeletePlaylist in ListCard.js");
         store.markListForDeletion(PlaylistId);
     }
 
     function handleToggleEdit(event) {
         event.stopPropagation();
+        console.log("Inside handleToggleEdit");
         toggleEdit();
     }
 
@@ -109,7 +112,9 @@ function ListCard(props) {
     }
     return (
         <div>
-            {cardElement}
+            {
+            cardElement
+            }
         </div>
         
     );

@@ -18,7 +18,9 @@ export const GlobalStoreActionType = {
     LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
-    MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION"
+    MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
+    MARK_SONG_FOR_EDIT: "MARK_SONG_FOR_EDIT",
+    ADD_NEW_SONG: "ADD_NEW_SONG"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -33,7 +35,9 @@ export const useGlobalStore = () => {
         currentList: null,
         newListCounter: 0,
         listNameActive: false,
-        listMarkedForDeletion: null
+        listMarkedForDeletion: null,
+        songMarkedForEdit: null,
+        songIndex: null
     });
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -111,6 +115,32 @@ export const useGlobalStore = () => {
                     listMarkedForDeletion: null
                 });
             }
+            case GlobalStoreActionType.MARK_SONG_FOR_EDIT:{
+                console.log(payload);
+                console.log(store.currentList);
+                console.log(payload.playlist);
+
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: payload.playlist,
+                    newListCounter: store.newListCounter,
+                    listNameActive: true,
+                    listMarkedForDeletion: null,
+                    songMarkedForEdit: payload.song, 
+                    songIndex: payload.songIndex
+                });
+            }
+            case GlobalStoreActionType.ADD_NEW_SONG:{
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: payload.playlist,
+                    newListCounter: store.newListCounter,
+                    listNameActive: true,
+                    listMarkedForDeletion: null,
+                    songMarkedForEdit: null, 
+                    songIndex: payload.songIndex
+                });
+            }
             default:
                 return store;
         }
@@ -158,6 +188,7 @@ export const useGlobalStore = () => {
             type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
             payload: {}
         });
+        tps.clearAllTransactions();
     }
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
@@ -236,6 +267,105 @@ export const useGlobalStore = () => {
         asyncCreateNewList();
     }
 
+    store.createNewSong = function (){
+        console.log("inside create New song!");
+        let newSong = {
+            title : "Untitled",
+            artist : "Unknown",
+            youTubeId : "dQw4w9WgXcQ"
+        }
+        let playlist = store.currentList;
+
+        playlist.songs.push(newSong);        
+
+        async function updateList(playlist) {
+            let response = await api.updatePlaylistById(playlist._id, playlist);
+            if(response.data.success){
+                storeReducer({
+                    type:GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload:playlist}
+                )
+            }
+        }
+        updateList(playlist);
+    }
+
+    store.markDeleteSong = function(){
+        console.log("Inside markDeleteSong");
+    }
+
+    store.deleteMarkedSong = function(){
+        console.log("Inside deleteMarkedSong");
+    }
+
+    store.editMarkedSong = function(songIndex, newSongDetails){
+        /*
+            let newSongDetails = {
+                id
+                title: songTitleRef.current.value,
+                artist: songArtistRef.current.value,
+                youTubeId: songYoutubeIdRef.current.value
+            }
+        */
+       let playlist = store.currentList;
+
+       playlist.songs[songIndex] = newSongDetails;
+       async function updateList(playlist) {
+            let response = await api.updatePlaylistById(playlist._id, playlist);
+            if(response.data.success){
+                storeReducer({
+                    type:GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload:playlist}
+                )
+            }
+        }
+        updateList(playlist);
+
+        store.hideEditSongModal();        
+    }
+
+    store.markEditSong = function(songToEditInfo){
+        /*
+        songToEditInfo = {
+            songIndex : songIndex,
+            playlist : store.currentList,
+            song : {
+                        id,
+                        title,
+                        artist,
+                        youtubeId
+                    }
+            // editStatus : true
+            
+        }
+        */
+
+        let playlist = songToEditInfo.playlist;
+        let playlistId = songToEditInfo.playlist._id;
+        let songId = songToEditInfo.song._id;
+        let songIndex = songToEditInfo.songIndex;
+
+        // console.log(songId);
+        console.log(playlist);
+
+        if(store.currentList){
+            console.log("marking edit song here");
+
+            storeReducer({
+                type: GlobalStoreActionType.MARK_SONG_FOR_EDIT,
+                payload: {
+                    songIndex: songIndex,
+                    playlistId: playlistId,
+                    songId: songId,
+                    playlist: playlist,
+                    song: songToEditInfo.song
+                }
+            });    
+        }
+
+        store.showEditSongModal();
+    }
+
     store.markListForDeletion = function(id) {
         console.log(id);
 
@@ -300,6 +430,16 @@ export const useGlobalStore = () => {
 
     store.hideEditSongModal = function() {
         let modal = document.getElementById("edit-song-modal");
+        modal.classList.remove("is-visible");
+    }
+
+    store.showDeleteSongModal = function() {
+        let modal = document.getElementById("delete-song-modal");
+        modal.classList.add("is-visible");
+    }
+
+    store.hideDeleteSongModal = function() {
+        let modal = document.getElementById("delete-song-modal");
         modal.classList.remove("is-visible");
     }
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT

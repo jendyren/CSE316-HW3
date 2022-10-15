@@ -1,30 +1,63 @@
-import React, {useContext} from 'react';
+import React, {useContext, useRef} from 'react';
 import { GlobalStoreContext } from '../store'
 
 function EditSongModal() {
     const { store } = useContext(GlobalStoreContext);
+    const songTitleRef = useRef(null);
+    const songArtistRef = useRef(null);
+    const songYoutubeIdRef = useRef(null);
+    //document.getElementById()
+    //{refName}
 
-    function handleEditSong(){
-        console.log("inside handleEditSong");
-        // let songDetails = {
-        //     title : document.getElementById("edit-song-title").value,
-        //     artist : document.getElementById("edit-song-artist").value,
-        //     youTubeId : document.getElementById("edit-song-youtubeId").value};
-
-        // let newSongKeyPair = {
-        //     key : this.props.songKeyPair.key,
-        //     song : songDetails
-        // }
-        // this.props.editSongCallback(this.props.songKeyPair, newSongKeyPair);
+    console.log("Inside handleEditSongModal() ");
+    
+    console.log(store.currentList);
+    let songDetails;
+    if (store.currentList){
+        console.log("---- playlist before checking if songMarkedForEdit ---")
+        console.log(store.currentList);
+        if(store.songMarkedForEdit){
+            songDetails = {
+                playlist: store.currentList,
+                id : store.songMarkedForEdit._id,
+                title : store.songMarkedForEdit.title,
+                artist : store.songMarkedForEdit.artist,
+                youTubeId : store.songMarkedForEdit.youTubeId};
+                console.log("---- playlist after checking if songMarkedForEdit ---")
+                console.log(store.currentList);
+        }
+        
     }
 
-    // if(songKeyPair){
-    //     document.getElementById("edit-song-title").value = songKeyPair.song.title;
-    //     document.getElementById("edit-song-artist").value = songKeyPair.song.artist;
-    //     document.getElementById("edit-song-youtubeId").value = songKeyPair.song.youTubeId;
-    // }
+    if(songDetails){
+        // console.log("AYOOOOO");
+        songTitleRef.current.value = songDetails.title;
+        songArtistRef.current.value = songDetails.artist;
+        songYoutubeIdRef.current.value = songDetails.youTubeId;
+    }
+
+    function handleEditSong(){
+        // console.log("inside handleEditSong");
+        // console.log(songTitleRef.current.value);
+        // console.log(songArtistRef.current.value);
+        // console.log(songYoutubeIdRef.current.value);
+        if(store.currentList){
+            let newSongDetails = {
+                id: songDetails.id,
+                title: songTitleRef.current.value,
+                artist: songArtistRef.current.value,
+                youTubeId: songYoutubeIdRef.current.value
+            }
+            let songIndex = store.songIndex;
+
+            console.log("the current playlist being passed into editMarkedSong");
+            console.log(store.currentList);
+            store.editMarkedSong(songIndex, newSongDetails);
+        }
+    }
+
     function handleHideEditSongModal(){
-        console.log("inside edit song modal, editSongModal");
+        // console.log("inside edit song modal, editSongModal");
         store.hideEditSongModal();
     }
     
@@ -33,15 +66,15 @@ function EditSongModal() {
             className="modal" 
             id="edit-song-modal" 
             data-animation="slideInOutLeft">
-                <div className="modal-root" id='verify-edit-song-root'>
+                <div className="modal-dialog" id='verify-edit-song-root'>
                     <div className="modal-north">
                         Edit Song
                     </div>
                     <div className="modal-center">
                         <div className="modal-center-content">
-                            <p>Title: <input type="text" id="edit-song-title"></input></p>
-                            <p>Artist: <input type="text" id="edit-song-artist"></input></p>
-                            <p>YoutubeId: <input type="text" id="edit-song-youtubeId"></input></p>
+                            <p>Title: <input type="text" id="edit-song-title" ref={songTitleRef}></input></p>
+                            <p>Artist: <input type="text" id="edit-song-artist" ref={songArtistRef}></input></p>
+                            <p>YoutubeId: <input type="text" id="edit-song-youtubeId" ref={songYoutubeIdRef}></input></p>
                         </div>
                     </div>
                     <div className="modal-south">
