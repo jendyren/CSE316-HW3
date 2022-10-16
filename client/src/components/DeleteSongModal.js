@@ -1,20 +1,37 @@
-import React, { Component } from 'react';
+import React, { useContext } from 'react';
+import { GlobalStoreContext } from '../store'
 
 function DeleteSongModal () {
-    function handleHideDeleteSongModal(){
-        console.log("inside Handle Remove Song Modal");
+    const { store } = useContext(GlobalStoreContext);
+    console.log(store.currentList);
+
+    let name = "";
+    if(store.currentList){
+        if(store.songMarkedForDelete){
+            console.log(store.songMarkedForDelete);
+            name = store.songMarkedForDelete.title;
+        }
+        // if(store.songMarkedForDelete){
+        //     let song = store.songMarkedForDelete.song;
+        //     name = song.title;
+        //     console.log(name);
+        // }      
     }
 
     function handleDeleteSong(){
-        console.log("inside handleRemoveSong");
+        console.log("inside handleDeleteSong");
+        console.log(store.songMarkedForDelete);
+        console.log(store.songIndex);
+        store.deleteMarkedSong(store.songIndex);
+    }
+
+    function handleHideDeleteSongModal(){
+        console.log("inside Handle Delete Song Modal");
         store.hideDeleteSongModal();
     }
-    let name = "potato";
 
-    // if(songKeyPair){
-    //     name = songKeyPair.song.title;
-    // }
-    
+
+
     return (
         <div 
             className="modal" 
@@ -22,21 +39,21 @@ function DeleteSongModal () {
             data-animation="slideInOutLeft">
                 <div className="modal-dialog" id='verify-delete-song-root'>
                     <div className="modal-north">
-                        Remove Song
+                        Delete Song
                     </div>
                     <div className="modal-center">
                         <div className="modal-center-content">
-                            Are you sure you wish to permanently remove {name} from the playlist?
+                            Are you sure you wish to permanently delete {name} from the playlist?
                         </div>
                     </div>
                     <div className="modal-south">
                         <input type="button" 
-                            id="remove-song-confirm-button" 
+                            id="delete-song-confirm-button" 
                             className="modal-button" 
                             onClick={handleDeleteSong}
                             value='Confirm' />
                         <input type="button" 
-                            id="remove-song-cancel-button" 
+                            id="delete-song-cancel-button" 
                             className="modal-button" 
                             onClick={handleHideDeleteSongModal}
                             value='Cancel' />

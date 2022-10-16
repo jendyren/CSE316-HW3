@@ -9,13 +9,13 @@ function EditSongModal() {
     //document.getElementById()
     //{refName}
 
-    console.log("Inside handleEditSongModal() ");
+    // console.log("Inside handleEditSongModal() ");
     
-    console.log(store.currentList);
+    // console.log(store.currentList);
     let songDetails;
     if (store.currentList){
-        console.log("---- playlist before checking if songMarkedForEdit ---")
-        console.log(store.currentList);
+        // console.log("---- playlist before checking if songMarkedForEdit ---")
+        // console.log(store.currentList);
         if(store.songMarkedForEdit){
             songDetails = {
                 playlist: store.currentList,
@@ -23,8 +23,8 @@ function EditSongModal() {
                 title : store.songMarkedForEdit.title,
                 artist : store.songMarkedForEdit.artist,
                 youTubeId : store.songMarkedForEdit.youTubeId};
-                console.log("---- playlist after checking if songMarkedForEdit ---")
-                console.log(store.currentList);
+                // console.log("---- playlist after checking if songMarkedForEdit ---")
+                // console.log(store.currentList);
         }
         
     }
@@ -50,8 +50,8 @@ function EditSongModal() {
             }
             let songIndex = store.songIndex;
 
-            console.log("the current playlist being passed into editMarkedSong");
-            console.log(store.currentList);
+            // console.log("the current playlist being passed into editMarkedSong");
+            // console.log(store.currentList);
             store.editMarkedSong(songIndex, newSongDetails);
         }
     }

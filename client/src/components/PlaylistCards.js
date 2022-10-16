@@ -2,6 +2,8 @@ import { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import SongCard from './SongCard.js'
 import { GlobalStoreContext } from '../store'
+import EditSongModal from './EditSongModal.js'
+import DeleteSongModal from './DeleteSongModal.js'
 /*
     This React component lets us edit a loaded list, which only
     happens when we are on the proper route.
@@ -16,7 +18,7 @@ function PlaylistCards() {
         store.history.push("/");
         return null
     }
-    
+
     return (
         <div id="playlist-cards">
         {
@@ -29,6 +31,8 @@ function PlaylistCards() {
                 />
             ))
         }
+        <EditSongModal/>
+        <DeleteSongModal/>
         </div>
     )
 }

@@ -18,6 +18,7 @@ function SongCard(props) {
             console.log("DoubleClick");
             let songIndex = event.target.id;
             
+            
             songIndex = ("" + songIndex).slice(songIndex.indexOf("-") + 1, songIndex.lastIndexOf("-"));
             console.log(songIndex);
 
@@ -32,9 +33,23 @@ function SongCard(props) {
         }
     }
 
-    function handleDeleteSong(){
+    function handleDeleteSong(event){
         console.log("Calling markDeleteSong");
-        store.markDeleteSong();
+        let songIndex = event.target.id;
+        // console.log(songIndex)    
+        songIndex = ("" + songIndex.substring("remove-song-".length));
+        // console.log(songIndex);
+        // console.log(index);
+        
+
+        let songToDeleteInfo = {
+            songIndex : index,
+            playlist : store.currentList,
+            song : store.currentList.songs[index]
+            // editStatus : true
+        }
+        // console.log(songToDeleteInfo);
+        store.markDeleteSong(songToDeleteInfo);
     }
     
 
@@ -59,7 +74,7 @@ function SongCard(props) {
                 onClick={handleDeleteSong}
                 value={"\u2715"}
             />
-            <EditSongModal/>
+            
         </div>
     );
 }
