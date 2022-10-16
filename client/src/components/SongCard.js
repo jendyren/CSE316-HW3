@@ -6,7 +6,14 @@ function SongCard(props) {
     const { song, index } = props;
     const [draggedTo, setDraggedTo] = useState(false);
     
+    let modalStatus = false;
     let cardClass = "list-card unselected-list-card";
+
+    if (store.isModalActive) {
+        console.log("Modal active!");
+        modalStatus = true;
+    }
+
     function handleClick(event){
         if (event.detail === 1) {
         }
@@ -113,6 +120,7 @@ function SongCard(props) {
                 type="button"
                 id={"remove-song-" + index}
                 className="list-card-button"
+                disabled={modalStatus}
                 onClick={handleDeleteSong}
                 value={"\u2715"}
             />

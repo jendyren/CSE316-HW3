@@ -9,31 +9,31 @@ function EditSongModal() {
     //document.getElementById()
     //{refName}
 
-    // console.log("Inside handleEditSongModal() ");
+    console.log("Inside handleEditSongModal() ");
     
-    // console.log(store.currentList);
-    let songDetails;
+    //console.log(store.currentList);
+    let oldSongDetails;
     if (store.currentList){
         // console.log("---- playlist before checking if songMarkedForEdit ---")
         // console.log(store.currentList);
         if(store.songMarkedForEdit){
-            songDetails = {
-                playlist: store.currentList,
-                id : store.songMarkedForEdit._id,
+            oldSongDetails = {
+                // playlist: store.currentList,
+                // id : store.songMarkedForEdit._id,
                 title : store.songMarkedForEdit.title,
                 artist : store.songMarkedForEdit.artist,
                 youTubeId : store.songMarkedForEdit.youTubeId};
-                // console.log("---- playlist after checking if songMarkedForEdit ---")
-                // console.log(store.currentList);
+                console.log("---- playlist after checking if songMarkedForEdit ---")
+                console.log(store.currentList);
         }
         
     }
 
-    if(songDetails){
+    if(oldSongDetails){
         // console.log("AYOOOOO");
-        songTitleRef.current.value = songDetails.title;
-        songArtistRef.current.value = songDetails.artist;
-        songYoutubeIdRef.current.value = songDetails.youTubeId;
+        songTitleRef.current.value = oldSongDetails.title;
+        songArtistRef.current.value = oldSongDetails.artist;
+        songYoutubeIdRef.current.value = oldSongDetails.youTubeId;
     }
 
     function handleEditSong(){
@@ -43,7 +43,7 @@ function EditSongModal() {
         // console.log(songYoutubeIdRef.current.value);
         if(store.currentList){
             let newSongDetails = {
-                id: songDetails.id,
+                // id: oldSongDetails.id,
                 title: songTitleRef.current.value,
                 artist: songArtistRef.current.value,
                 youTubeId: songYoutubeIdRef.current.value
@@ -52,7 +52,7 @@ function EditSongModal() {
 
             // console.log("the current playlist being passed into editMarkedSong");
             // console.log(store.currentList);
-            store.editMarkedSong(songIndex, newSongDetails);
+            store.addEditSongTransaction(songIndex, newSongDetails, oldSongDetails);
         }
     }
 

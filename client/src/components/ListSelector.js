@@ -21,6 +21,20 @@ const ListSelector = () => {
         store.createNewList();
     }
     let listCard = "";
+    let enabledButtonClass = "playlister-button";
+
+    let modalStatus = false;
+    if (store.isModalActive) {
+        console.log("Modal active!");
+        modalStatus = true;
+    }
+
+    let canAddList = store.currentList === null && !modalStatus; //if no playlist selected, you can add a new list
+    console.log("Checking currentList for canAddList");
+    console.log(store.currentList);
+    console.log("canAddList: ");
+    console.log(canAddList);
+
     if (store) {
         listCard = store.idNamePairs.map((pair) => (
             <ListCard
@@ -29,6 +43,11 @@ const ListSelector = () => {
                 selected={false}
             />
         ))
+        // //if playlist active do not allow adding a new playlist
+        // if(store.listNameActive){
+        //     console.log("List Name is active so listButtonDisable = true");
+        //     listButtonDisabled = true; 
+        // }
     }
     return (
         <div id="playlist-selector">
@@ -37,8 +56,9 @@ const ListSelector = () => {
                 <input
                     type="button"
                     id="add-list-button"
+                    disabled={!canAddList}
                     onClick={handleCreateNewList}
-                    className="playlister-button"
+                    className={enabledButtonClass}
                     value="+" />
                 Your Lists
             </div>{

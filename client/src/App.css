@@ -71,7 +71,7 @@ body {
   max-height: 70vh;
 }
 
-.playlister-button, .playlister-button-disabled {
+.playlister-button-disabled {
   font-size:36pt;
   border-width: 0px;
   float:left;
@@ -81,8 +81,8 @@ body {
 }
 
 .playlister-button:hover {
-  cursor: pointer;
-  color:black;
+  /* cursor: pointer; */
+  /* color:black; */
 }
 
 .playlister-button-disabled {
@@ -140,6 +140,10 @@ body {
 .list-card-button {
   float:right;
   font-size:18pt;
+}
+.list-card-button-disabled{
+  color:white;
+  opacity: 100%;
 }
 
 input {
@@ -395,8 +399,19 @@ span {
   border-width: 1px;
   border-color: black;
   border-style: solid;
+  float:left;
+  cursor: pointer;
   box-shadow: 2px 4px #888888;
   border-radius: 5px;
+
+  /*
+    font-size:36pt;
+  border-width: 0px;
+  
+  color: black;
+  
+  opacity: 100%;
+  */
 }
 
 #add-song-button {

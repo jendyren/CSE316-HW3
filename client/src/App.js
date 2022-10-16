@@ -8,6 +8,26 @@ import { Banner, ListSelector, PlaylistCards, Statusbar } from './components'
     @author McKilla Gorilla
 */
 const App = () => {
+    function handleAppKeyDown(keyEvent){
+        let CTRL_KEY_CODE = "17";
+        if (keyEvent.which == CTRL_KEY_CODE) {
+            this.ctrlPressed = true;
+        }
+        else if (keyEvent.key.toLowerCase() == "z") {
+            if (this.ctrlPressed) {
+                this.undo();
+            }
+        }
+        else if (keyEvent.key.toLowerCase() == "y") {
+            if (this.ctrlPressed) {
+                this.redo();
+            }
+        }
+    }
+    function handleAppKeyUp(keyEvent){
+        if (keyEvent.which == "17")
+            this.ctrlPressed = false;
+    }
     return (
         <Router>
             <Banner />

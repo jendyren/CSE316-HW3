@@ -65,10 +65,25 @@ function ListCard(props) {
     if (selected) {
         selectClass = "selected-list-card";
     }
+
+    let modalStatus = false;
+    if (store.isModalActive) {
+        console.log("Modal active!");
+        modalStatus = true;
+    }
+    
     let cardStatus = false;
     if (store.isListNameEditActive) {
         cardStatus = true;
     }
+
+    console.log(editActive);
+    let canEditOrRemoveList = !modalStatus || editActive;
+    console.log("canEditOrRemoveList");
+    console.log(canEditOrRemoveList);
+    console.log(cardStatus);
+    console.log(modalStatus);
+
     let cardElement =
         <div
             id={idNamePair._id}
@@ -82,7 +97,7 @@ function ListCard(props) {
                 {idNamePair.name}
             </span>
             <input
-                disabled={cardStatus}
+                disabled={!canEditOrRemoveList}
                 type="button"
                 id={"delete-list-" + idNamePair._id}
                 className="list-card-button"
@@ -90,7 +105,7 @@ function ListCard(props) {
                 value={"\u2715"}
             />
             <input
-                disabled={cardStatus}
+                disabled={!canEditOrRemoveList}
                 type="button"
                 id={"edit-list-" + idNamePair._id}
                 className="list-card-button"

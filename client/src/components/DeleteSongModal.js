@@ -22,7 +22,7 @@ function DeleteSongModal () {
         console.log("inside handleDeleteSong");
         console.log(store.songMarkedForDelete);
         console.log(store.songIndex);
-        store.deleteMarkedSong(store.songIndex);
+        store.addDeleteSongTransaction(store.songIndex, store.songMarkedForDelete);
     }
 
     function handleHideDeleteSongModal(){
