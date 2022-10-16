@@ -6,8 +6,9 @@ function DeleteListModal () {
     let name = "";
     if (store.currentList) {
         name = store.currentList.name;
-        console.log("setting name to " + {name});
-        console.log({name});
+        console.log(store.currentList);
+        // console.log("setting name to " + {name});
+        // console.log({name});
     }
 
     function handleDeleteMarkedList(){

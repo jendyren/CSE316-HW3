@@ -3,7 +3,7 @@ import { GlobalStoreContext } from '../store'
 
 function DeleteSongModal () {
     const { store } = useContext(GlobalStoreContext);
-    console.log(store.currentList);
+    // console.log(store.currentList);
 
     let name = "";
     if(store.currentList){

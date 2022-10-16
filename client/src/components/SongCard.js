@@ -1,12 +1,11 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState} from 'react'
 import { GlobalStoreContext } from '../store'
-import EditSongModal from './EditSongModal.js'
 
 function SongCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const { song, index } = props;
+    const [draggedTo, setDraggedTo] = useState(false);
     
-
     let cardClass = "list-card unselected-list-card";
     function handleClick(event){
         if (event.detail === 1) {
@@ -35,9 +34,9 @@ function SongCard(props) {
 
     function handleDeleteSong(event){
         console.log("Calling markDeleteSong");
-        let songIndex = event.target.id;
+        // let songIndex = event.target.id;
         // console.log(songIndex)    
-        songIndex = ("" + songIndex.substring("remove-song-".length));
+        // songIndex = ("" + songIndex.substring("remove-song-".length));
         // console.log(songIndex);
         // console.log(index);
         
@@ -51,13 +50,56 @@ function SongCard(props) {
         // console.log(songToDeleteInfo);
         store.markDeleteSong(songToDeleteInfo);
     }
-    
+
+    function handleDragStart(event){
+        console.log("handleDragStart");
+        event.dataTransfer.setData("song", event.target.id);
+    }
+
+    function handleDragOver(event){
+        console.log("handleDragOver");
+        event.preventDefault();
+    }
+
+    function handleDragEnter(event){
+        event.preventDefault();
+        setDraggedTo(true);
+    }
+
+    function handleDragLeave(event){
+        event.preventDefault();
+        setDraggedTo(false);
+    }
+
+    function handleDrop(event){
+        console.log("inside handleDrop");
+        event.preventDefault();
+        let target = event.target;
+        let targetId = target.id;
+        targetId = targetId.slice(target.id.indexOf("-") + 1, target.id.lastIndexOf("-"));
+        let sourceId = event.dataTransfer.getData("song");
+        sourceId = sourceId.slice(sourceId.indexOf("-") + 1, sourceId.lastIndexOf("-"));
+
+        console.log("Target Id: ");
+        console.log(targetId);
+        console.log("Source Id: ");
+        console.log(sourceId);
+        
+        setDraggedTo(false);
+        store.addMoveSongTransaction(sourceId, targetId);
+    }
 
     return (
         <div
             key={index}
             id={'song-' + index + '-card'}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
             onClick={handleClick}
+            onDrop={handleDrop}
+            draggable="true"
             className={cardClass}
         >
             {index + 1}.

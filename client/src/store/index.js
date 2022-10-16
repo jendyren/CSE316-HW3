@@ -1,6 +1,7 @@
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
+import MoveSong_Transaction from '../transactions/MoveSong_Transaction'
 export const GlobalStoreContext = createContext({});
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -302,7 +303,7 @@ export const useGlobalStore = () => {
             }
         }
         updateList(playlist);
-        // console.log(playlist);
+        console.log(playlist);
     }
 
     store.markDeleteSong = function(songToDeleteInfo){
@@ -339,7 +340,7 @@ export const useGlobalStore = () => {
 
         let playlist = store.currentList;
         playlist.songs.splice(songIndex, 1)
-        
+
         async function updateList(playlist) {
             let response = await api.updatePlaylistById(playlist._id, playlist);
             if(response.data.success){
@@ -462,12 +463,13 @@ export const useGlobalStore = () => {
             }
         }
         asyncDeletePlaylistById(id);
+
+        store.hideDeletePlayListModal();
     }
     
     store.deleteMarkedList = function() {
         console.log(store.listMarkedForDeletion);
         store.deletePlaylistById(store.listMarkedForDeletion);
-        
     }
     
     store.showDeletePlayListModal = function() {
@@ -499,6 +501,56 @@ export const useGlobalStore = () => {
         let modal = document.getElementById("delete-song-modal");
         modal.classList.remove("is-visible");
     }
+
+    // THIS FUNCTION MOVES A SONG IN THE CURRENT LIST FROM
+    // start TO end AND ADJUSTS ALL OTHER ITEMS ACCORDINGLY
+    store.moveSong = function (start, end) {
+        console.log("Inside moveSong function");
+        let playlist = store.currentList;
+        
+
+        // WE NEED TO UPDATE THE STATE FOR THE APP
+        start -= 1;
+        end -= 1;
+        if (start < end) {
+            let temp = playlist.songs[start+1];
+            for (let i = start+1; i < end+1; i++) {
+                playlist.songs[i] = playlist.songs[i + 1];
+            }
+            playlist.songs[end+1] = temp;
+        }
+        else if (start+1 > end+1) {
+            let temp = playlist.songs[start+1];
+            for (let i = start+1; i > end+1; i--) {
+                playlist.songs[i] = playlist.songs[i - 1];
+            }
+            playlist.songs[end+1] = temp;
+        }
+        console.log("Playlist before update: ");
+        console.log(playlist);
+        async function updateList(playlist) {
+            let response = await api.updatePlaylistById(playlist._id, playlist);
+            if(response.data.success){
+                storeReducer({
+                    type:GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload:playlist}
+                )
+            }
+        }
+        updateList(playlist);
+
+        console.log("Playlist after update: ");
+        console.log(playlist);
+
+    }
+    // THIS FUNCTION ADDS A MoveSong_Transaction TO THE TRANSACTION STACK
+    store.addMoveSongTransaction = function (start, end){
+        console.log("Inside add Move Song Transaction");
+        let transaction = new MoveSong_Transaction(store, start, end);
+        tps.addTransaction(transaction);
+    }
+
+
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };
 }
