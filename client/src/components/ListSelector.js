@@ -28,8 +28,13 @@ const ListSelector = () => {
         console.log("Modal active!");
         modalStatus = true;
     }
-
-    let canAddList = store.currentList === null && !modalStatus; //if no playlist selected, you can add a new list
+    let canAddList;
+    if(store.currentList || store.listNameActive || modalStatus){
+        canAddList = false
+    }else{
+        canAddList = true;
+    }
+    //  store.currentList === null && !modalStatus; //if no playlist selected, you can add a new list
     console.log("Checking currentList for canAddList");
     console.log(store.currentList);
     console.log("canAddList: ");
